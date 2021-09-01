@@ -1,0 +1,22 @@
+PopupPanel:
+  - Please Update Latest: CenterBtn
+    Attention: LeftBtn
+    TRIGGER WARNING: CenterBtn #renewBtn
+    Info: CenterBtn #renewBtn
+    IMPORTANT: CenterBtn #renewBtn
+  - Please Update Latest Chapter1: CenterBtn
+    Attention1: LeftBtn
+    TRIGGER WARNING1: CenterBtn #renewBtn
+    Info: CenterBtn #renewBtn
+    IMPORTANT: CenterBtn #renewBtn
+PopupPanel1:
+  - Please Update Latest Chapter: CenterBtn
+    Attention: LeftBtn
+    TRIGGER WARNING: CenterBtn #renewBtn
+    Info: CenterBtn #renewBtn
+    IMPORTANT: CenterBtn #renewBtn
+  - Please Update Latest Chapter1: CenterBtn
+    Attention1: LeftBtn
+    TRIGGER WARNING1: CenterBtn #renewBtn
+    Info: CenterBtn #renewBtn
+    IMPORTANT: CenterBtn #renewBtn1

@@ -1,0 +1,121 @@
+#无参数：${func()}
+#顺序参数：${func(a, b)}
+#字典参数：${func(a=1, b=2)}
+#混合类型参数：${func(1, 2, a=3, b=4)}
+#单个用例可以#号全部注释，未注释用例step里面最少有一个，用例说明参考“测试步骤配置说明”
+case1:
+    caseauthor: "lipeng"
+    casename: "安装游戏-"
+    casedec: "安装游戏"
+    repeattime: "3"
+    reportname: "安装游戏"
+    step:
+#        - ${test_uninstallGame()}
+        - ${test_installGame()}
+case2:
+    caseauthor: "lipeng"
+    casename: "用户登陆-"
+    casedec: "用户登陆描述"
+    repeattime: "3"
+    reportname: "用户登陆"
+    step:
+        - ${test_startgame()} #启动游戏
+        - ${test_GameLoaded()} #游戏加载处理
+#        - ${test_discoverPopup()} #大厅弹框
+#        - ${pageTurn(Bottom,4)} #底部切换到个人信息
+#        - ${test_signin()} #用户登录
+
+#case8:
+#    caseauthor: "lipeng"
+#    casename: "语言切换-"
+#    casedec: "语言切换"
+#    repeattime: "3"
+#    reportname: "语言切换"
+#    step:
+#        - ${pageTurn(Upper,chapter)} #选择切换到侧边栏
+#        - ${test_LanguageChoose(Spanish)} #如果语言不同切换语言并重启，SidePanel,English,Spanish,German,French,Korean,Portuguese,Russian,Italian,Japanese"
+#        - ${pageTurn(POS,9,5)} #点击屏幕坐标百分比去掉0.比如点击中级位置(5,5)
+#        - ${test_discoverPopup()} #大厅弹框
+#        - ${pageTurn(Upper,chapter)}
+#        - ${test_checkLanguageChoose(Spanish)} #检查语言是否为设置语言
+#        - ${pageTurn(POS,9,5)} #点击屏幕坐标百分比去掉0.比如点击中级位置(5,5)
+#case3:
+#    caseauthor: "lipeng"
+#    casename: "视觉小说阅读"
+#    casedec: "视觉小说阅读描述"
+#    repeattime: "3"
+#    reportname: "视觉小说阅读"
+#    step:
+#        - ${pageTurn(Bottom,0)}
+#        - ${test_bookchoose(Weekly, 1)}
+#        - ${test_bookPlay()}
+#        - ${test_bookload()}
+#        - ${test_bookread()}
+#        - ${pageTurn(Bottom)}
+
+#case4:
+#    caseauthor: "lipeng"
+#    casename: "短信小说创作"
+#    casedec: "短信小说创作"
+#    repeattime: "1"
+#    reportname: "短信小说创作"
+#    step:
+#        - ${pageTurn(Bottom,2)}
+#        - ${test_Creation()} #创建书籍
+#        - ${test_ChapterEdit()} #编辑内容
+#        - ${test_click(BtnBack,BtnBack,返回到上一个页面)} #编辑内容
+#        - ${test_sleep(3)} #编辑内容
+#        - ${test_click(BtnBack,BtnBack,返回到上一个页面)} #编辑内容
+##        - ${test_branch()} #创建分支选项
+#        - ${test_IntroduceEdit(lipeng is book)} #书籍详情编辑
+
+#case5:
+#    caseauthor: "lipeng"
+#    casename: "短信小说阅读"
+#    casedec: "短信小说阅读"
+#    repeattime: "3"
+#    reportname: "短信小说阅读"
+#    step:
+#        - ${pageTurn(Bottom,2)}
+#        - ${test_chooseUGCBook(0, 1)}
+#        - ${test_ReadUGCBook(2)}
+#case6:
+#    caseauthor: "江浚朋"
+#    casename: "个人信息"
+#    casedec: "个人信息"
+#    repeattime: "3"
+#    reportname: "个人信息"
+#    step:
+#        - ${pageTurn(Bottom,4)}
+#        - ${test_ChangeUseravatar()} #更换背景表情
+#        - ${test_operationAchievement()}
+##        - ${test_ChangeUseremoticons(0)}
+#        - ${test_nameedit(guigui)}
+#case7:
+#    caseauthor: "江浚朋"
+#    casename: "商城"
+#    casedec: "商城"
+#    repeattime: "3"
+#    reportname: "商城"
+#    step:
+#        - ${pageTurn(Bottom,4)}
+##        - ${test_click(TicketBtn,TicketBtn,购买票入口)}
+#        - ${test_shop_buy_ticket(1003)}
+#        - ${test_shop_buy_diamond(1004)}
+#        - ${test_shop_buy_member()}
+booktraversal:
+    caseauthor: "lipeng"
+    casename: "视觉小说遍历"
+    casedec: "视觉小说遍历"
+    repeattime: "50"
+    reportname: "视觉小说遍历"
+    step:
+        - ${pageTurn(Bottom,0)}
+#        - ${test_getuserID()}
+        - ${test_booklist()}
+#        - ${test_booktraversal(10071003)}
+#        - ${test_booktraversal(10071004)}
+#        - ${test_booktraversal(10071005)}
+#        - ${test_booktraversal(10071006)}
+#        - ${test_booktraversal(10071007)}
+#        - ${test_booktraversal(10071008)}

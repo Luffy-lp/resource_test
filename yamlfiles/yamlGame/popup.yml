@@ -1,0 +1,51 @@
+#增加配置随机弹框元素，step最少配置一个
+- 0:
+    Popupscene: "Discover"
+    Poputype: "none"
+    Popupdec: "大厅弹框配置，PopupPanel和PopUpPanel"
+    import_module_functions:
+        - step.case_test
+    step:
+        - ${文本弹框(UIAlter, Popup)}
+        - ${24小时新手礼包(UITwentyFourHourReward, BtnGet)} #- ${弹框名称(弹框标识元素, 出现弹框后点击按钮元素)}UIBookNewDetail
+        - ${每日登陆积分(UIGetLoginCredit, FreeBtn)}
+        - ${一日三签活动弹框(UIDailyLoginRewardABTest, ClaimtBtn)}
+        - ${VIP到期推送(UIVipsaleHallDlg, BtnClosed)}
+        - ${VIP活动到期推送(UIVipsaleResultDlg, BtnGet)}
+        - ${宝箱弹框(UITreasureHint, sure)}
+        - ${用户登陆奖励(UIGetOffCredit, GetBtn)}
+        - ${游戏条款(UIPrivacyPopup, BtnAccept)}
+        - ${答谢弹框(LuaUIThanksPopup, Back)}
+        - ${内容推送弹框(UITextPopup, Btn)}
+        - ${内容推送弹框2(UITextPopup, BtnOk)}
+        - ${推送礼包(UIGiftPopup, Popup)}
+        - ${DayPass详情弹框(UIDayPassState, Button)}
+        - ${书籍详情页(UIVisualDetailView, Close )}
+        - ${奖励领取(UIClaimReward, BtnGet)}
+        - ${领取Daypass奖励(UIDayPassReward, BtnRead)}
+        - ${周礼包(UIWeekCardBuy, close)}
+        - ${月签到活动(UISignActivity, Back)}
+        - ${月签到活动(UIRewardPopup, BtnGet)}
+        - ${月签到活动(UISignActivity, Back)}
+        - ${关闭宝箱1(UIVipSaleTip, CloseBtn)}
+        - ${关闭宝箱(UITreasureShow, close)}
+        - ${关联书籍(UIStorySequel, UpBtn)}
+- 1:
+    Popupscene: "bookdetail"
+    Poputype: "none"
+    Popupdec: "书籍详情页弹框配置"
+    import_module_functions:
+        - step.case_test
+    step:
+        - ${详情页文本弹框(UIAlter, Popup)}
+#        - ${道具卡使用指导(UIPassGuide, Popup)}
+- 2:
+    Popupscene: "Popup"
+    Poputype: "none"
+    Popupdec: "FullScreenPanel"
+    import_module_functions:
+        - step.case_test
+    step:
+        - ${月签到(UISignActivity, Back)}
+        - ${周签到(FullScreenPanel, CloseBtn)}
+        - ${会员即将到期(UIMemberRenew, cancelBtn)} #renewBtn

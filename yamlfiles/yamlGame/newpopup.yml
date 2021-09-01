@@ -1,0 +1,22 @@
+UIAlter:
+    Please Update Latest Chapter: CenterBtn
+    Attention: LeftBtn
+    TRIGGER WARNING: CenterBtn #renewBtn
+    Info: CenterBtn #renewBtn
+    IMPORTANT: CenterBtn #renewBtn
+VisualRead:
+    CloseBtn: CloseBtn
+    UIVipSaleTip: CloseBtn  #VIP弹框
+    UITreasureShow: close
+    UISub: BackBtn
+    UIFullBodyGuide: SetBtn #全身像
+    UIMeanGirls: btnclose
+dialogueEndPOP:
+    RoleCard: BtnGet
+    AdGroup: BtnGet
+    UIChapterStar: CloseBtn
+    UIChapterContinue: CloseBtn
+    ContinueBtn: ContinueBtn
+    UIRoleLikeNew: OKBtn
+    UIVipSaleTip: CloseBtn
+    UITreasureShow: close

@@ -1,0 +1,7 @@
+#多语言配置
+English:
+    formatName: "en-US"
+    ChineseName: "英语"
+Spanish:
+    formatName: "es-ES"
+    ChineseName: "西语"

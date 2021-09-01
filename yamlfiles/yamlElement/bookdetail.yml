@@ -1,0 +1,9 @@
+#暂未使用
+bookdetail:
+    name: "书籍详情页"
+    page_bookdetail:
+        - click_Play: {"findobject": "Play", "clickobject": "Play"}
+        - click_close: {"name": "Mask", "clickobject": "Button"}
+    page_cardpanel:
+        - click_Play: {"findobject": "Play1", "clickobject": "Play1"}
+        - click_close: {"name": "Mask1", "clickobject": "Button1"}

@@ -1,0 +1,29 @@
+UserData:
+  uuid: "47395"   #******用户ID需要修改正确的配置*********** 41447 43551
+  channel_id: "AVG10005" #配置渠道
+  device_id: "490000000326402" #设备ID
+  device_platform: "android" #平台类型
+  loginGuide: "Google" #绑定方式
+  loginemail: "lipeng66976658@gmail.com" #绑定用户名
+  loginpassword: "yo5161381" #绑定密码
+  usertype: "bookread" #
+EnvData:
+  APKpackage: "Chapters_10009_17_05.apk" #安装包名称
+  packageName: "com.mars.avgchapters" #apk包名称
+  ADBip: "192.168.191.71:5039"  #android://192.168.191.27:5039/d4115565
+  ADBdevice: "88Y0219B06010006" #android://192.168.191.71:5039/88Y0219B06010006
+  method: "?cap_method=MINICAP_STREAM&&ori_method=MINICAPORI&&touch_method=MINITOUCH" #auto_setup通用连接设备的参数
+  simulator: "?cap_method=JAVACAP&&ori_method=MINICAPORI&&touch_method=MINITOUCH" #auto_setupJAVA连接设备的参数
+  device: "android" #连接设备类型
+  sleepLevel: "5" #根据手机运行速度配置延迟
+  sendDing: True  #True
+  powerOff: True #True False #跑完后关机
+#  DingUrl: 'https://oapi.dingtalk.com/robot/send?access_token=24a07bab1bad3756399be5b6c97a1a159f36239fa503283abed368c5f86a2f29'
+  DingUrl: 'https://oapi.dingtalk.com/robot/send?access_token=a7cb8133b77326963dfc27dd71fc37f1fbe29418cedd7a78650371536c78658c'
+APIData:
+  URL: "http://dev-chapters-int.stardustgod.com/" #API连接地址http://testitf.stardustgod.com/
+  Header: {"TIMECLOSE": "1"} # API头内容
+PathData:
+  errorLogpath: "storage/emulated/0/Android/data/com.mars.avgchapters/files/errorfile" #unity异常日志存放路径尽量配置正确
+  adbpath: "airtest/core/android/static/adb/windows/adb.exe" #调用adb路径
+  Desktoppath: "" #桌面路径

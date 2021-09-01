@@ -1,0 +1,11 @@
+#视觉小说白类型处理配置，出现对白类型后依次尝试执行后面的点击或等待操作
+3: ["角色名称设置", "ConfirmBtn"]
+4: ["旧版换装", "UIPropItem(Clone)", "ConfirmBtn"]
+5: ["旧版换装", "UIPropItem(Clone)", "ConfirmBtn"]
+6: ["旧版换装", "UIPropItem(Clone)", "ConfirmBtn"]
+9: ["旧版换装", "UIPropItem(Clone)", "ConfirmBtn"]
+10: ["新版换装", "ButtonNoPrice", "ButtonPrice",4] #对白类型ID: [对白名称, 点击按钮元素1,点击按钮2, 点击按钮n,等待时间]
+17: ["四人同框", "UIChapterFourRole", "1"]
+21: ["邮件类型","Title"]
+26: ["打电话ui, 此类型播放接听电话的动画", 5]
+27: ["特殊特效类型，播放过场动画", 20,"Hand1"]
