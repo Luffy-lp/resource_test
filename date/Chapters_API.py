@@ -10,7 +10,7 @@ from common.COM_path import *
 class APiClass():
     Header = {"TIMECLOSE": "1"}
     url = "http://dev-chapters-int.stardustgod.com/"
-    channel_id = "AVG10003"
+    channel_id = "AVG10005"
     _response = None
 
     def get_set(self):
@@ -20,10 +20,11 @@ class APiClass():
         with open(filepath, encoding='utf-8') as file:
             value = yaml.safe_load(file)
         self.channel_id = value["channel_id"]
+        print("目前渠道：",self.channel_id)
         self.url = value["url"]
         return self.channel_id
 
-    def try_APIlink(self, url, headers, body, name, trytime=100, timeout=10):
+    def try_APIlink(self, url, headers, body, name, trytime=20, timeout=10):
         """requests公共方法"""
         while (trytime >= 0):
             trytime = trytime - 1
@@ -207,4 +208,4 @@ class APiClass():
 # list=aa["items"]
 # print(len(list))
 # for i in list:
-#     print(str(i["story_id"])+"001"+"-"+str(i["story_id"])+"0"+str(i["chapter_count"])+":",i["title"])
+#     print(str(i["story_id"])+"001"+"-"+str(i["story_id"])+"0"+str(i["chapter_count"])+":")

@@ -81,7 +81,7 @@ Desktoppath=get_desktop()
 
 # 测试结果的目录路径
 # path_REPORT_DIR = os.path.join(path_BASE_DIR, "result")
-path_REPORT_DIR = os.path.join(Desktoppath, "result")
+path_REPORT_DIR = os.path.join(Desktoppath, "re_result")
 
 # 测试报告的目录路径
 path_REPORT_DIR = os.path.join(path_REPORT_DIR, "report")
