@@ -20,7 +20,8 @@ def create_logger():
     sh.setLevel(LOGGING.get('sh_level'))
     mylog.addHandler(sh)
 
-    formatter = "%(asctime)s - [%(filename)s-->line:%(lineno)d] - %(levelname)s: %(message)s"
+    # formatter = "%(asctime)s - [%(filename)s-->line:%(lineno)d] - %(levelname)s: %(message)s"
+    formatter = "%(message)s"
     mate = logging.Formatter(formatter)
 
     fh.setFormatter(mate)

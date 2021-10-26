@@ -14,7 +14,6 @@ class CheckManage():
         self.chapterid = chapterid
         self.bookchapter = bookchapter
         self.initialize()
-        self.error_dir = {}
 
     def initialize(self):
         """初始化"""
@@ -33,123 +32,8 @@ class CheckManage():
         self.face_resources_list = []
         self.sound_resources_list=[]
 
-    def check(self):
-        """单章检测流程"""
-        MyData.download_bookresource(self.bookid)  # 拉取全书对白配置
-        MyData.read_story_cfg_chapter(self.bookid, self.bookchapter)  # 存储章节对白配置
-        chats_info = MyData.story_cfg_chapter_dir[self.bookchapter]  # 当前阅读章节信息
-        self.select_info= MyData.story_select_dir[self.bookchapter] # 当前阅读选项信息
-        self.add_check_info(chats_info)  # 生成需要检测的信息
-        MyData.download_bookresource(self.bookchapter)  # 拉取章节资源
-        self.getfile_name()  # 获取资源文件用于对比
-        self.contrast()  # 对比并给出结果
-
-    def contrast(self):
-        """对比"""
-        for role_id, idlist in self.role_check_dir.items():
-            self.error_dir[self.bookchapter][role_id] = []
-            for i in idlist:
-                k = i + ".png"
-                if k in self.role_resources_dir[role_id]:
-                    print(role_id + "的" + k + "是ok的")
-                else:
-                    k1 = i + "_1" + ".png"
-                    if k1 in self.role_resources_dir[role_id]:
-                        print(role_id + "的" + k1 + "是ok的")
-                        continue
-                    content = "【角色资源异常】：角色包{0}中未发现{1} 资源".format(role_id, i)
-                    mylog.error(content)
-                    self.error_dir[self.bookchapter][role_id].append(content)
-
-        for role_id, fashionidlist in self.face_check_dir.items():
-            for i in fashionidlist:
-                if role_id not in self.role_resources_dir:
-                    content = "【face资源文件夹异常】:资源包未找到{}的文件夹".format(role_id)
-                    MyData.error_dir[role_id] = content
-                    mylog.error(content)
-                else:
-                    k = i + ".png"
-                    print("facek", k)
-                    if k in self.role_resources_dir[role_id]:
-                        print(role_id + "的" + k + "是ok的")
-                    else:
-                        k1 = i + "_1" + ".png"
-                        print("facek1", k1)
-                        if k1 in self.role_resources_dir[role_id]:
-                            print(role_id + "的" + k1 + "是ok的")
-                            continue
-                        content = "【face资源异常】：角色包{0}中未发现{1} 资源".format(role_id, i)
-                        mylog.error(content)
-                        self.error_dir[self.bookchapter][role_id].append(content)
-
-        for bg in self.bg_check_list:
-            self.error_dir[self.bookchapter]["Bg"] = []
-            if bg in self.bg_resources_list:
-                print(bg + "是ok的")
-            else:
-                content = "【背景资源异常】：{0}资源丢失".format(bg)
-                mylog.error(content)
-                self.error_dir[self.bookchapter]["Bg"].append(content)
-        for bgm in self.bgm_check_list:
-            self.error_dir[self.bookchapter]["Bgm"] = []
-            if bgm in self.bgm_resources_list:
-                print(bgm + "是ok的")
-            else:
-                content = "【音乐资源异常】：{0}资源丢失".format(bgm)
-                mylog.error(content)
-                self.error_dir[self.bookchapter]["Bgm"].append(content)
-        for sound in self.sound_check_list:
-            self.error_dir[self.bookchapter]["sound"] = []
-            if sound in self.sound_resources_list:
-                print(bg + "是ok的")
-            else:
-                content = "【音效资源异常】：{0}资源丢失".format(sound)
-                mylog.error(content)
-                self.error_dir[self.bookchapter]["sound"].append(content)
-
-    def add_check_info(self, chats_info):
-        """添加检测信息"""
-        for chat in chats_info.values():
-            self.add_role_id(chat)
-            self.add_friend_id(chat)
-            self.add_bg_id(chat)
-            self.add_bgm_id(chat)
-            self.add_show_id(chat)
-            self.add_video_id(chat)
-            self.add_sound_name(chat)
-        self.de_weight()
-        self.get_roleFashionFilename()
-
-    def de_weight(self):
-        """去重"""
-        self.bgm_check_list = set(self.bgm_check_list)
-        self.bg_check_list = set(self.bg_check_list)
-        self.show_check_list=set(self.show_check_list)
-        self.sound_check_list=set(self.show_check_list)
-        # self.face_check_list = list(set(self.face_check_list))
-        for i in self.role_fashion_dir:
-            self.role_fashion_dir[i] = list(set(self.role_fashion_dir[i]))
-        for i in self.face_check_dir:
-            self.face_check_dir[i] = list(set(self.face_check_dir[i]))
-        print("bgm_check_list", self.bgm_check_list)
-        print("bg_check_list", self.bg_check_list)
-        print("face_check_dir", self.face_check_dir)
-        print("show_check_list", self.show_check_list)
-
-
-    def get_roleFashionFilename(self):
-        """获取路径，注意没有加png"""
-        print("role_fashion_dir", self.role_fashion_dir)
-        for role_id, role_list in self.role_fashion_dir.items():
-            self.role_check_dir[role_id] = []
-            Defaultlist = MyData.getDefaultFashion(self.bookid, role_id)
-            self.role_check_dir[role_id] = Defaultlist
-            for fashion_id in role_list:
-                fashionlist = MyData.getDIYFashion(fashion_id)
-                for filename in fashionlist:
-                    self.role_check_dir[role_id].append(filename)
-
     def add_bg_id(self, chat):
+        """背景检测"""
         bg_id = str(chat["scene_bg_id"])
         if bg_id and bg_id != "0":
             bg_id = bg_id + ".jpg"
@@ -172,77 +56,157 @@ class CheckManage():
                 self.role_check_dir[role_id] = []
         else:
             return
-        self.add_fashion_id(chat,role_id)
-        self.add_select_id(chat,role_id,self.select_info,select_id)
-        self.add_search_select_id(chat,role_id)
-        self.add_face_id(chat,role_id)
+        self.add_fashion_id(chat, role_id)
+        self.add_select_id(chat, role_id, self.select_info, select_id)
+        self.add_select_jump(chat, role_id, self.select_info, select_id)
+        self.add_search_select_id(chat, role_id)
+        self.add_face_id(chat, role_id)
 
-    def add_fashion_id(self,chat,role_id):
+    def add_is_finished(self, chat):
+        """结束检测"""
+        is_finished = str(chat["is_finished"])
+        if is_finished == "1":
+            self.chat.append(chat["id"])
+            self.is_finished += 1
+            if self.is_finished > 1:
+                mylog.error(self.bookchapter + "is_finished数量:" + str(self.is_finished) + "对白:" + str(
+                    self.chat[0]) + "||" + str(self.chat[1]))
+
+    def add_fashion_id(self, chat, role_id):
+        """fashion"""
         if "fashion_id" in chat:
             fashion_id = str(chat["fashion_id"])
             if fashion_id and fashion_id != "0":
+                # if role_id=="100008873":
+                #     print("myfashin",fashion_id)
+                #     print("chat:",chat["id"])
                 self.role_fashion_dir[role_id].append(fashion_id)
 
-    def add_face_id(self, chat,role_id):
+    def add_face_id(self, chat, role_id):
         face_id = str(chat["face_id"])
         if face_id and face_id != "0" and role_id and role_id != "0":
             if role_id not in self.face_check_dir:
                 self.face_check_dir[role_id] = []
             self.face_check_dir[role_id].append(face_id)
 
-    def add_select_id(self, chat,role_id,select_info,select_id,search=None):
+    def add_select_id(self, chat, role_id, select_info, select_id, search=None):
         """添加信息"""
-        self.role_check_dir[role_id]:list=[]
-        if select_id and select_id != "0":
+        self.role_check_dir[role_id]: list = []
+        if select_id and select_id != 0 and select_id != "0":
+            # print("select_id：",chat["id"],select_id)
             if select_id in select_info:
                 for select in select_info[select_id].values():
+                    if not select["jump_chat_id"] > 0:
+                        content = "【jump_chat_id配置异常】:对白为id{0}的select_id{1}存在跳转为0".format(chat["id"], select_id)
+                        mylog.error(content)
                     if select["goodstype"]:
-                        if select["goodstype"]=="fashion":
+                        if select["goodstype"] == "fashion":
                             self.role_fashion_dir[role_id].append(select["goodsid"])
                         else:
                             self.role_check_dir[role_id].append(select["goodsid"])
-
             else:
                 if search:
-                    content = "【search_select_id反向查找配置异常】:id->{0}反向章节->{1}select配置中未找到{2}".format(search,chat["id"], select_id)
+                    content = "【search_select_id反向查找配置异常】:id->{0}反向章节->{1}select配置中未找到{2}".format(search, chat["id"],
+                                                                                                  select_id)
                     mylog.error(content)
                 else:
-                    content = "【select_id配置异常】:对白为id{0}的select_id{1}未找到".format(chat["id"],select_id)
+                    content = "【select_id配置异常】:对白为id{0}的select_id{1}未找到".format(chat["id"], select_id)
                     mylog.error(content)
-    def add_search_select_id(self,chat,role_id):
+
+    def add_select_jump(self, chat, role_id, select_info, select_id, search=None):
+        """jump信息查询"""
+        self.role_check_dir[role_id]: list = []
+        if select_id and select_id != 0 and select_id != "0":
+            # print("select_id：",chat["id"],select_id)
+            if select_id in select_info:
+                select_dir = {}
+                for select in select_info[select_id].values():
+                    if not select["jump_chat_id"] in select_dir:
+                        select_dir[select["jump_chat_id"]] = 1
+                    else:
+                        select_dir[select["jump_chat_id"]] += 1
+                for key, vlus in select_dir.items():
+                    if vlus == 2:
+                        content = "【{3}】:对白为id{0}->select_id{1}->jump_chat_id：{2}存在跳转2次跳转".format(chat["id"], select_id,
+                                                                                                  key, self.bookchapter)
+                        mylog.error(content)
+                    if not select["jump_chat_id"] > 0:
+                        content = "【jump_chat_id配置异常】:对白为id{0}的select_id{1}存在跳转为0".format(chat["id"], select_id)
+                        mylog.error(content)
+                    if select["goodstype"]:
+                        if select["goodstype"] == "fashion":
+                            self.role_fashion_dir[role_id].append(select["goodsid"])
+                        else:
+                            self.role_check_dir[role_id].append(select["goodsid"])
+            else:
+                if search:
+                    content = "【search_select_id反向查找配置异常】:id->{0}反向章节->{1}select配置中未找到{2}".format(search, chat["id"],
+                                                                                                  select_id)
+                    mylog.error(content)
+                else:
+                    content = "【select_id配置异常】:对白为id{0}的select_id{1}未找到".format(chat["id"], select_id)
+                    mylog.error(content)
+
+    def add_search_select_id(self, chat, role_id):
         """添加反向查找"""
-        search_select_id = str(chat["search_select_id"])
+        try:
+            search_select_id = str(chat["search_select_id"])
+        except:
+            search_select_id = None
         if search_select_id and search_select_id != "0":
-            chapters_id=search_select_id.split("*")[0]
+            chapters_id = search_select_id.split("*")[0]
             searchchapter = chapters_id
-            book_id=chapters_id[:5]
-            select_id=search_select_id.split("*")[1]
+            book_id = chapters_id[:5]
+            select_id = search_select_id.split("*")[1]
             MyData.download_bookresource(book_id)
-            MyData.read_story_cfg_chapter(book_id,chapters_id)
-            select_dir=MyData.story_select_dir[chapters_id]
-            self.add_select_id(chat,role_id,select_dir,select_id,searchchapter)
+            MyData.read_story_cfg_chapter(book_id, chapters_id)
+            select_dir = MyData.story_select_dir[chapters_id]
+            self.add_select_id(chat, role_id, select_dir, select_id, searchchapter)
             # self, chat, role_id, select_info, select_id, search = None
+
     # def add_content_check(self,chat):
     #     try:
     #         content = str(chat["content"])
     #         mind = str(chat["mind"])
     #     except:
     #         pass
+    def mail(self, chat):
+        mail_list = chat["mail"].split("#")
+        try:
+            if len(mail_list) > 1:
+                mailTitle = mail_list[0]
+                self.show_check_list.append(mail_list[1])
+            else:
+                mailTitle = mail_list[0]
+        except:
+            self.com_result(False, str(chat["id"]), "邮件配置")
+
+    def add_chat_type(self, chat):
+        chat_type = chat["chat_type"]
+        if chat_type == 21:
+            self.mail()
 
     def add_sound_name(self, chat):
         sound_name = str(chat["sound_name"])
         if sound_name and sound_name != "0":
+            sound_name = sound_name + ".mp3"
             self.sound_check_list.append(sound_name)
 
     def add_show_id(self, chat):
-        show_id = str(chat["show_id"])
+        try:
+            show_id = str(chat["show_id"])
+        except:
+            show_id = None
         if show_id and show_id != "0":
             self.show_check_list.append(show_id)
 
     def add_video_id(self, chat):
-        video_id = str(chat["video_id"])
+        try:
+            video_id = str(chat["video_id"])
+        except:
+            video_id = None
         if video_id and video_id != "0":
-            video_list=video_id.split("#")
+            video_list = video_id.split("#")
             self.show_check_list.append(video_list[1])
             self.role_check_dir[video_list[0]]
             if video_list[0] not in self.role_check_dir:
@@ -258,7 +222,6 @@ class CheckManage():
             else:
                 content = "【friend_id资源异常】:对白{}类型为{}的friend_id为空".format(chat["id"], chat["chat_type"])
                 mylog.error(content)
-                self.error_dir["friend_id"] = content
 
         if "friend_id" in chat:
             friend_id = str(chat["friend_id"])
@@ -274,88 +237,3 @@ class CheckManage():
             friend_fashion_id = str(chat["friend_fashion_id"])
             if friend_fashion_id and friend_id != "0":
                 self.role_fashion_dir[friend_id].append(friend_fashion_id)
-
-    # def get_selects(self,chat,role_id_list:list):
-    #     select
-
-    def getfile_name(self):
-        for role_id in self.role_check_dir:
-            file = self.bookchapter + "/role/" + role_id
-            path = os.path.join(path_resource, file)
-            self.role_resources_dir[role_id] = []
-            for root, dirs, files in os.walk(path):
-                self.role_resources_dir[role_id] = self.role_resources_dir[role_id] + files
-        # self.bg_resources_list = []
-        # self.bgm_resources_list = []
-        # self.role_resources_list = []
-        file = self.bookchapter + "/background"
-        path = os.path.join(path_resource, file)
-        for root, dirs, files in os.walk(path):
-            self.bg_resources_list = files
-        file = self.bookchapter + "/sound/bgm"
-        path = os.path.join(path_resource, file)
-        for root, dirs, files in os.walk(path):
-            self.bgm_resources_list = files
-        file = self.bookchapter + "/showids"
-        path = os.path.join(path_resource, file)
-        for root, dirs, files in os.walk(path):
-            self.show_resources_list = files
-        file = self.bookchapter + "/sound/sound"
-        path = os.path.join(path_resource, file)
-        for root, dirs, files in os.walk(path):
-            self.soun_resources_list = files
-        # file = self.bookchapter + "/role/" + role_id+"face"
-        # path = os.path.join(path_resource, file)
-        # for root, dirs, files in os.walk(path):
-        #     self.face_resources_list = files
-
-    def clock(self, type=None):  # 计时器
-        """stop结束返回时间"""
-        global start_time
-        if type == "stop":
-            spendtime = '%.2f' % (perf_counter() - start_time)
-            print("花费时间{}秒:".format(spendtime))
-            return spendtime
-        else:
-            start_time = perf_counter()
-
-    def result(self, bookchapter):
-        if bookchapter not in MyData.bookresult_dir.keys():
-            MyData.bookresult_dir[bookchapter] = 1
-            print("newchapter is none")
-        elif MyData.bookresult_dir[bookchapter] == "True" or MyData.bookresult_dir[bookchapter] == "False":
-            print(bookchapter + "已存在结果{}".format(MyData.bookresult_dir[bookchapter]))
-            # assert_equal(True, True, bookchapter + "已存在结果{}".format(MyData.bookresult_dir[bookchapter]))
-            return True
-        elif type(MyData.bookresult_dir[bookchapter]) == int:
-            if MyData.bookresult_dir[bookchapter] >= 3:
-                print(bookchapter + "失败3次跳过阅读")
-                return True
-            else:
-                result = MyData.bookresult_dir[bookchapter] + 1
-                MyData.update_record_bookread(bookchapter, result)
-        else:
-            MyData.update_record_bookread(bookchapter, 1)
-
-    def getCheckList(self):
-        """遍历检测"""
-        for self.bookchapter in MyData.check_list:
-            self.bookchapter = str(self.bookchapter)
-            self.bookid = self.bookchapter[:5]
-            self.chapterid = self.bookchapter[5:]
-            self.clock()
-            mylog.info("=============================================================================")
-            self.error_dir[self.bookchapter] = {}
-            self.initialize()
-            self.result(self.bookchapter)
-            mylog.info("===开始" + self.bookchapter + "资源对比===")
-            self.check()
-            mylog.info("===完成" + self.bookchapter + "资源对比===")
-            MyData.update_record_bookread(self.bookchapter, "True")
-            mylog.info("=============================================================================")
-            self.clock("stop")
-
-
-if __name__ == '__main__':
-    Check1 = Check()
-    Check1.getCheckList()

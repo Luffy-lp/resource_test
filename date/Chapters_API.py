@@ -107,7 +107,6 @@ class APiClass():
             "platform": "Android",
             "Accept": "application/json"
         }
-        print(self.channel_id)
         url = self.url + "/na/story/v1/saloon?debug=true"
         body = {"channel_id": self.channel_id,
                 "version": "624.0.0",
@@ -124,7 +123,6 @@ class APiClass():
             "platform": "Android",
             "Accept": "application/json"
         }
-        print(self.channel_id)
         url = self.url + "/na/story/v1/saloon/view?debug=true"
         body = {"channel_id": self.channel_id,
                 "module_id": module_id,
@@ -177,6 +175,7 @@ class APiClass():
         address: str = response["address"]
         addresslist = address.split('/')
         address = address.replace("\\", "")
+        print(address)
         time = 5
         while (time > 1):
             time = time - 1
@@ -193,14 +192,13 @@ class APiClass():
                 file_zip.extractall(pathbook)
                 file_zip.close()
                 os.remove(path)
-                # print("书籍资源下载成功")
-                return
+                print("书籍资源读取成功")
+                return True
             except BaseException as e:
                 sleep(2)
                 print("书籍资源读取失败,重试", e)
-            else:
-                print("书籍资源读取成功")
         print("下载书籍资源失败")
+        return False
 #         # raise Exception("下载书籍资源失败")
 # APiClass1 = APiClass()
 # uuid="6177842"
