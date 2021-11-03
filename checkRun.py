@@ -43,10 +43,6 @@ class Consumer(threading.Thread):
             self.__queue.task_done()
 
 
-# def consumer_process(ip):
-#     time.sleep(1)
-#     print(ip)
-
 def myCheck(bookchapter):
     cls_instance = Check(bookchapter)
     cls_instance.getCheckList(bookchapter)
