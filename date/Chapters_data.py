@@ -41,9 +41,11 @@ class UserData(APiClass):
         return cls._instance
 
     def getCheck(self):
-        if self.checkConf:
+        if self.checkConf["is_all"]:
+            print("全书检查")
             self.getCheckList_all()
         else:
+            print("单章节检查")
             self.getCheckList()
 
     def yaml_bookinfo(self):
@@ -60,8 +62,9 @@ class UserData(APiClass):
         with open(path, encoding="utf-8") as f:
             data = yaml.load(f.read(), Loader=yaml.Loader)
         self.checkConf["is_all"] = data["CheckConf"]["is_all"]
+        self.checkConf["threadAmount"] = data["CheckConf"]["threadAmount"]
 
-    def getSumChapter(self,bookid):
+    def getSumChapter(self, bookid):
         self.download_bookresource(bookid)
         bookpath = bookid + "\\data_s\\"
         path = os.path.join(path_resource, bookpath)
@@ -70,9 +73,9 @@ class UserData(APiClass):
 
     def getCheckList_all(self):
         """获取检测列表"""
-        for bookchapter,v in self.bookresult_dir.items():
+        for bookchapter, v in self.bookresult_dir.items():
             # print(len(bookchapter))
-            if v=="True":
+            if v == "True":
                 continue
             chapter = str(bookchapter)
             length = len(chapter)
@@ -97,6 +100,7 @@ class UserData(APiClass):
             else:
                 print("书籍列表配置错误，请注意格式")
                 return
+        self.check_list = set(self.check_list)
 
     def getCheckList(self):
         """获取检测列表"""
@@ -124,8 +128,9 @@ class UserData(APiClass):
                         print("章节区间", bookchapter)
                         self.check_list.append(bookchapter)
             else:
-                print("书籍列表配置错误，请注意格式-->",chapter)
+                print("书籍列表配置错误，请注意格式-->", chapter)
                 return
+        self.check_list = set(self.check_list)
         return self.check_list
 
     def update_record_bookread(self, chapter, result):
@@ -154,33 +159,13 @@ class UserData(APiClass):
     def getDefaultFashion(self, bookid, role_id):
         """获取角色默认fashion"""
         role_id = str(role_id)
-        role_id = str(role_id)
+        role_list = []
         if role_id not in self.fashion_dir:
             data = self.storyrole(book_id=bookid, role_ids=role_id)
             role_list = self.getfashion_list(data[len(data) - 1], role_id)
         else:
             role_list = self.fashion_dir[role_id]
         return role_list
-
-    def getDIYFashion(self, fashion_id):
-        """获取DIY装扮"""
-        fashion_list = []
-        if fashion_id is not None and fashion_id != "0":
-            if fashion_id not in self.fashion_dir:
-                fashion_id = str(fashion_id)
-                data = self.fashionShowApi(fashion_ids=fashion_id)
-                if len(data) > 0:
-                    fashion_list = self.getfashion_list(data[len(data) - 1], fashion_id)
-                    # fashion_list = self.getfashion_list(data[0], fashion_id)
-                    self.fashion_dir[fashion_id] = fashion_list
-                else:
-                    content = "【fashion异常】：{}的内容为空".format(fashion_id)
-                    MyData.error_dir[fashion_id] = content
-                    mylog.error(content)
-                    print(content)
-            else:
-                fashion_list = self.fashion_dir[fashion_id]
-        return fashion_list
 
     def getfashion_list(self, data, fashion_id):
         """装扮列表"""
@@ -192,6 +177,29 @@ class UserData(APiClass):
                 if data[i]:
                     fashion_list.append({i: data[i]})
         self.fashion_dir[fashion_id] = fashion_list
+        self.w_yaml_fashion()
+        return fashion_list
+
+    def getDIYFashion(self, fashion_id):
+        """获取DIY装扮"""
+        fashion_list = []
+        # if str(fashion_id)=="100026701":
+        #     print("fashion_id100026701",fashion_id)
+        if fashion_id is not None and fashion_id != "0":
+            if fashion_id not in self.fashion_dir:
+                fashion_id = str(fashion_id)
+                data = self.fashionShowApi(fashion_ids=fashion_id)
+                if len(data) > 0:
+                    fashion_list = self.getfashion_list(data[len(data) - 1], fashion_id)
+                    # fashion_list = self.getfashion_list(data[0], fashion_id)
+                    self.fashion_dir[fashion_id] = fashion_list
+                else:
+                    content = "【fashion异常】：{}的内容为空".format(fashion_id)
+                    # MyData.error_dir[fashion_id] = content
+                    mylog.error(content)
+                    print(content)
+            else:
+                fashion_list = self.fashion_dir[fashion_id]
         return fashion_list
 
     def r_yaml_fashion(self):
@@ -214,7 +222,7 @@ class UserData(APiClass):
     #     mydir = {}
     #     if type(self.bookresult_dir) == dict:
     #         return
-    #     list1 = self.bookresult_dir.split("第")
+    #     list1 = self.bookresult_dir.split("[new]")
     #     if list1:
     #         for i in range(0, len(list1) - 1):
     #             if list1[i]:
@@ -232,9 +240,9 @@ class UserData(APiClass):
             return
         list1 = self.bookresult_dir.split("[new]")
         if list1:
-            for i in range(0, len(list1)-1):
-                chapter =list1[i][len(list1[i])-8:len(list1[i])-3]
-                mydir[chapter]=None
+            for i in range(0, len(list1) - 1):
+                chapter = list1[i][len(list1[i]) - 8:len(list1[i])]
+                mydir[chapter] = None
         yamlbook_listpath = os.path.join(Desktoppath, "bookCheck_result.yml")
         with open(yamlbook_listpath, 'w+', encoding="utf-8") as f:
             yaml.dump(mydir, f, allow_unicode=True)
@@ -245,26 +253,28 @@ class UserData(APiClass):
         mybool = os.path.exists(file)
         if mybool:
             return True
-        re=self.avgcontentApi(bookid)
+        re = self.avgcontentApi(bookid)
         if re:
             print("下载书籍配置成功")
             return True
         else:
             return False
-    def read_story_cfg_chapter(self, bookid, chapter_id):
-        """读取当前章节信息txt"""
+
+    def read_story_cfg_chat(self, bookid, chapter_id):
+        """读取当前章节chat信息txt"""
         bookpath = bookid + "\\data_s\\" + chapter_id + "_chat.txt"
-        selectpath = bookid + "\\data_s\\" + chapter_id + "_select.txt"
         path = os.path.join(path_resource, bookpath)
-        path1 = os.path.join(path_resource, selectpath)
         with open(path, "r", encoding='utf-8') as f:  # 设置文件对象
             data = f.read()  # 可以是随便对文件的操作
-        data = eval(data)
-        self.story_cfg_chapter_dir[chapter_id] = data
+        return eval(data)
+
+    def read_story_cfg_select(self, bookid, chapter_id):
+        """读取当前章节select信息txt"""
+        selectpath = bookid + "\\data_s\\" + chapter_id + "_select.txt"
+        path1 = os.path.join(path_resource, selectpath)
         with open(path1, "r", encoding='utf-8') as f:  # 设置文件对象
             selectdata = f.read()  # 可以是随便对文件的操作
-        self.story_select_dir[chapter_id] = eval(selectdata)
-        return self.story_cfg_chapter_dir[chapter_id]
+        return eval(selectdata)
 
     def read_yaml(self, filepath):
         with open(filepath, encoding='utf-8') as file:
@@ -274,13 +284,13 @@ class UserData(APiClass):
     def clear(self):
         """清空之前的报告和文件"""
         print("清空文件中")
-        filelist = os.listdir(path_resource)
-        for fileName in filelist:
-            filepath = os.path.join(path_resource,fileName)
-            if os.path.isdir(filepath):
-                shutil.rmtree(filepath)
-            else:
-                os.remove(filepath)
+        # filelist = os.listdir(path_resource)
+        # for fileName in filelist:
+        #     filepath = os.path.join(path_resource, fileName)
+        #     if os.path.isdir(filepath):
+        #         shutil.rmtree(filepath)
+        #     else:
+        #         os.remove(filepath)
         path = os.path.join(path_LOG_MY, "logging.log")
         with open(path, 'w') as f1:
             f1.seek(0)
@@ -290,22 +300,23 @@ class UserData(APiClass):
 
 
 MyData = UserData()
-# print(MyData.check_list)
 
-# newrole_list = self.getUserStoryData_fashion(self.UserData_dir["uuid"], bookid, role_id)
-# bookid = "51603"
-# role_id = "100005995"
-# fashion_ids1 = "1000014944"
+# bookid = "10264"
+# role_id = "10264"
+# fashion_ids1 = "1000078588"
+# fashion_ids1list=["100026701"]
+# # # fashion_ids1list=['1000078588', '1000078589', '1000078586', '1000079202', '1000078590', '1000078741', '1000078738', '1000078742', '1000078739', '1000078737', '1000078587', '1000078736', '1000078743', '1000078740']
 # data = MyData.storyrole(book_id=bookid, role_ids=role_id)
 # print("默认角色",data)
-# # # sun=len(data)-1
-# # # data=data[sun]
-# # # print("角色默认fashion", data)
-# # list1=MyData.getDefaultFashion(bookid,role_id)
-# # print("默认角色",MyData.fashion_dir)
-# list2=MyData.getDIYFashion(fashion_ids1)
-# print("DIY",list2)
-# print("我的角色",MyData.fashion_dir)
+# # # # # # sun=len(data)-1
+# # # # # # data=data[sun]
+# # # # # # print("角色默认fashion", data)
+# list1=MyData.getDefaultFashion(bookid,role_id)
+# print("默认角色",MyData.fashion_dir)
+# for i in fashion_ids1list:
+#     list2=MyData.getDIYFashion(i)
+#     print("DIY",list2)
+#     print("我的角色",MyData.fashion_dir)
 
 # role_list = self.getfashion_list(date[len(date) - 1], role_id)
 # fashion_ids1="1000050135"
