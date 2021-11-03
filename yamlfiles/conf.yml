@@ -27,3 +27,7 @@ PathData:
   errorLogpath: "storage/emulated/0/Android/data/com.mars.avgchapters/files/errorfile" #unity异常日志存放路径尽量配置正确
   adbpath: "airtest/core/android/static/adb/windows/adb.exe" #调用adb路径
   Desktoppath: "" #桌面路径
+
+CheckConf:
+  is_all: True #True False #是否统一跑全书
+  threadAmount: 10 #线程数量 根据机器配置增加或减少

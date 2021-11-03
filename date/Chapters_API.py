@@ -163,7 +163,7 @@ class APiClass():
         data = self.try_APIlink(url=url, headers=self.Header, body=body, name="fashionShowApi")
         return data["data"]
 
-    def avgcontentApi(self, bookid, channel_id="AVG10005", country_code="CN"):
+    def avgcontentApi(self, bookid,country_code="CN"):
         """获取章节资源下载地址"""
         url = self.url + "avgcontentApi.Class.php?DEBUG=true"
         body = {"chapter_id": bookid,
@@ -172,11 +172,12 @@ class APiClass():
                 "country_code": country_code,
                 }
         response = self.try_APIlink(url=url, headers=self.Header, body=body, name="avgcontentApi")
+        # print(bookid)
         address: str = response["address"]
         addresslist = address.split('/')
         address = address.replace("\\", "")
         print(address)
-        time = 5
+        time = 8
         while (time > 1):
             time = time - 1
             try:
